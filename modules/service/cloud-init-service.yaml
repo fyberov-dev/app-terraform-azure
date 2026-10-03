@@ -1,0 +1,15 @@
+#cloud-config
+package_update: true
+packages:
+  - docker.io
+runcmd:
+  - systemctl enable --now docker
+  - >
+    docker run -d
+    --name backend
+    --restart=always
+    --network host
+    -e 'MODE=api'
+    -e 'DB_TARGET=${db_target}'
+    -e 'DATABASE_URL=${db_url}'
+    '${beacon_image}'
